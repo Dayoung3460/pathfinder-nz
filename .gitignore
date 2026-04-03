@@ -18,6 +18,9 @@ env/
 # ChromaDB persistent storage
 data/chroma_db/
 
+# Claude Code
+.claude/settings.local.json
+
 # IDE
 .idea/
 *.iml
