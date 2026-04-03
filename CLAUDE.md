@@ -2,7 +2,33 @@
 
 This file provides context and guidance for Claude Code when working on the Pathfinder NZ project.
 Read this file carefully before writing any code.
-Also read `PRD.md` in the project root before starting any task.
+Also read `PRD.md` and `ROADMAP.md` in the project root before starting any task.
+
+---
+
+## Current LLM Configuration
+
+During initial development, the project uses Google Gemini API (free tier) instead of Anthropic Claude API.
+
+**Current:**
+- LLM: `gemini-2.0-flash` via `langchain-google-genai`
+- Env var: `GOOGLE_API_KEY`
+
+**Planned (Phase 2):**
+- LLM: `claude-sonnet-4-20250514` via `langchain-anthropic`
+- Env var: `ANTHROPIC_API_KEY`
+
+When switching to Claude, only change the LLM initialisation in `backend/rag/chain.py`. All other code remains unchanged because LangChain provides a unified interface.
+
+```python
+# Current (Gemini)
+from langchain_google_genai import ChatGoogleGenerativeAI
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+
+# Future (Claude)
+from langchain_anthropic import ChatAnthropic
+llm = ChatAnthropic(model="claude-sonnet-4-20250514")
+```
 
 ---
 
@@ -179,6 +205,24 @@ Required in `.env`:
 ANTHROPIC_API_KEY=your_key_here
 CHROMA_DB_PATH=./data/chroma_db
 ```
+
+---
+
+## Agents
+
+Agents are defined in `.claude/agents/`. **Always automatically select and use the most appropriate agent(s) for each task. Never wait for the user to specify which agent to use.**
+
+For tasks that span multiple areas, use multiple agents in sequence.
+
+| Task type | Agent to use |
+|---|---|
+| Scraping INZ pages, ChromaDB ingestion, URL config | `document-ingestion-agent` |
+| RAG chain, retriever, LLM connection, answer quality | `rag-chain-agent` |
+| System prompts, employer/applicant mode, disclaimer | `prompt-engineer-agent` |
+| FastAPI endpoints, routes, CORS, error handling | `fastapi-agent` |
+| Streamlit UI, role selection, chat interface | `streamlit-ui-agent` |
+| Dockerfile, docker-compose, volumes, env vars | `docker-agent` |
+| Testing, QA, grounding verification, edge cases | `qa-agent` |
 
 ---
 
