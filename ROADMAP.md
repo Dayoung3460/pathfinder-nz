@@ -61,13 +61,13 @@ Only the frontend changes. The FastAPI backend (`/chat` endpoint) remains untouc
 ### Key Implementation Notes
 - FastAPI CORS is already configured to accept React frontend requests from day one
 - Role selection, chat history, and source citation UI all need to be rebuilt in React
-- Use `fetch()` or `axios` to call the existing `/chat` POST endpoint
+- Use `fetch()` to call the existing `/chat` POST endpoint
 - `st.session_state` equivalents: `useState` for role and message history
 
 ### Suggested React Stack
 - React + TypeScript
 - Tailwind CSS (design token mapping from DESIGN.md)
-- Axios or native fetch for API calls
+- Native fetch for API calls
 - Vite for build tooling
 
 ---
