@@ -1,4 +1,5 @@
 langchain
+langchain-anthropic
 langchain-google-genai
 langchain-community
 langchain-chroma

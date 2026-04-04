@@ -1,6 +1,6 @@
 """LangChain RAG chain connecting retriever, LLM, and role-based prompts."""
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
@@ -66,7 +66,7 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
 
     prompt = ChatPromptTemplate.from_messages(chat_messages)
 
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+    llm = ChatAnthropic(model="claude-haiku-4-5-20251001", max_tokens=1024)
 
     chain = prompt | llm | StrOutputParser()
 
