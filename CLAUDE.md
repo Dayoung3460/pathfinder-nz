@@ -8,26 +8,19 @@ Also read `PRD.md` and `ROADMAP.md` in the project root before starting any task
 
 ## Current LLM Configuration
 
-During initial development, the project uses Google Gemini API (free tier) instead of Anthropic Claude API.
-
 **Current:**
-- LLM: `gemini-2.0-flash` via `langchain-google-genai`
-- Env var: `GOOGLE_API_KEY`
-
-**Planned (Phase 2):**
-- LLM: `claude-sonnet-4-20250514` via `langchain-anthropic`
-- Env var: `ANTHROPIC_API_KEY`
-
-When switching to Claude, only change the LLM initialisation in `backend/rag/chain.py`. All other code remains unchanged because LangChain provides a unified interface.
+- LLM: `claude-haiku-4-5-20251001` via `langchain-anthropic`
+- Embeddings: `gemini-embedding-001` via `langchain-google-genai`
+- Env vars: `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`
 
 ```python
-# Current (Gemini)
-from langchain_google_genai import ChatGoogleGenerativeAI
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
-
-# Future (Claude)
+# LLM (backend/rag/chain.py)
 from langchain_anthropic import ChatAnthropic
-llm = ChatAnthropic(model="claude-sonnet-4-20250514")
+llm = ChatAnthropic(model="claude-haiku-4-5-20251001", max_tokens=1024)
+
+# Embeddings (backend/rag/retriever.py, backend/rag/ingest.py)
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 ```
 
 ---
@@ -202,7 +195,7 @@ All URLs were confirmed accessible as of April 2026.
 Required in `.env`:
 
 ```
-ANTHROPIC_API_KEY=your_key_here
+ANTHROPIC_API_KEY=
 CHROMA_DB_PATH=./data/chroma_db
 ```
 
