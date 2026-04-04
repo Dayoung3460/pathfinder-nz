@@ -208,7 +208,25 @@ CHROMA_DB_PATH=./data/chroma_db
 
 ---
 
-## Agents
+## QA Policy
+
+Always ask the user before running QA. Never run QA automatically without asking first.
+
+Prompt the user to run QA at the following moments:
+
+1. **Feature complete** — when a major feature is fully implemented (e.g. ingest pipeline, RAG chain, FastAPI endpoint, Streamlit UI)
+2. **After a bug fix** — when a bug has been fixed, to verify nothing else has broken
+3. **Before deployment** — before any cloud deployment to confirm the app is in a releasable state
+
+Use this exact message when prompting:
+
+"✅ [feature/fix name] is complete. Would you like me to run QA now to verify everything is working correctly?"
+
+Wait for the user's confirmation before proceeding with QA.
+
+---
+
+
 
 Agents are defined in `.claude/agents/`. **Always automatically select and use the most appropriate agent(s) for each task. Never wait for the user to specify which agent to use.**
 

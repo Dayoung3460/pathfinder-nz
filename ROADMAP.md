@@ -79,6 +79,10 @@ Only the frontend changes. The FastAPI backend (`/chat` endpoint) remains untouc
 Further improvements after Phase 2 is complete.
 
 - Scheduled document refresh pipeline (auto re-scrape INZ URLs weekly)
+  - Note: scheduler runs regardless of whether INZ content has changed (wasteful)
+  - Consider adding change detection first to avoid unnecessary re-ingestion
+  - Requires always-on server (cloud deployment) to work reliably
+  - Must include failure alerting via Slack or other messenger (webhook) so silent failures don't go unnoticed
 - Conversation memory across sessions
 - Deployment to a cloud platform (e.g., Render, Railway, or AWS)
 - Analytics to track most common questions

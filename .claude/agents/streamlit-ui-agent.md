@@ -17,7 +17,7 @@ Shown when `st.session_state.role` is not set.
 
 Display:
 - Product name: **Pathfinder NZ**
-- Tagline: *"Your guide to New Zealand visas — powered by official INZ documents."*
+- Tagline: *"Your guide to New Zealand visas, powered by official INZ documents."*
 - Two buttons:
   - "I'm an Employer / HR Manager"
   - "I'm a Visa Applicant or Immigrant"
