@@ -19,11 +19,38 @@ BATCH_DELAY_SECONDS = 65
 MAX_RETRIES = 3
 
 
-def ingest_documents() -> None:
-    """Scrape all INZ URLs and store chunks in ChromaDB."""
+def _get_ingested_urls() -> set[str]:
+    """Return source URLs already stored in ChromaDB."""
+    try:
+        embeddings = GoogleGenerativeAIEmbeddings(
+            model="models/gemini-embedding-001",
+            google_api_key=GOOGLE_API_KEY,
+        )
+        vs = Chroma(persist_directory=CHROMA_DB_PATH, embedding_function=embeddings)
+        results = vs._collection.get(include=["metadatas"])
+        return {m.get("source", "") for m in results["metadatas"]}
+    except Exception:
+        return set()
+
+
+def ingest_documents(resume: bool = False) -> None:
+    """Scrape INZ URLs and store chunks in ChromaDB.
+
+    Args:
+        resume: If True, skip URLs already in ChromaDB.
+    """
+    urls_to_ingest = ALL_URLS
+    if resume:
+        already_ingested = _get_ingested_urls()
+        urls_to_ingest = [u for u in ALL_URLS if u not in already_ingested]
+        logger.info("Resume mode: %d URLs already ingested, %d remaining.", len(already_ingested), len(urls_to_ingest))
+        if not urls_to_ingest:
+            logger.info("All URLs already ingested. Nothing to do.")
+            return
+
     documents = []
 
-    for url in ALL_URLS:
+    for url in urls_to_ingest:
         try:
             loader = WebBaseLoader(url)
             docs = loader.load()
@@ -83,4 +110,5 @@ def ingest_documents() -> None:
 
 
 if __name__ == "__main__":
-    ingest_documents()
+    import sys
+    ingest_documents(resume="--resume" in sys.argv)
