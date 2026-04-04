@@ -9,7 +9,7 @@ from backend.config import GOOGLE_API_KEY, CHROMA_DB_PATH
 def get_retriever():
     """Return a ChromaDB retriever with top-k=5."""
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
+        model="models/gemini-embedding-001",
         google_api_key=GOOGLE_API_KEY,
     )
 
