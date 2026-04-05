@@ -15,8 +15,8 @@ env/
 # Environment variables
 .env
 
-# ChromaDB persistent storage
-data/chroma_db/
+# ChromaDB persistent storage (committed for Render deployment)
+# data/chroma_db/
 
 # Claude Code
 .claude/settings.local.json

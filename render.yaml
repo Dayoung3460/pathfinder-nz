@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: pathfinder-nz-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: CHROMA_DB_PATH
+        value: ./data/chroma_db
+
+  - type: web
+    name: pathfinder-nz-frontend
+    runtime: docker
+    dockerfilePath: frontend/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: BACKEND_URL
+        value: https://pathfinder-nz-backend.onrender.com
