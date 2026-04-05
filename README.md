@@ -67,7 +67,7 @@ Answer + Source URLs returned to UI
 ### Option 1: Docker (recommended)
 
 ```bash
-git clone https://github.com/your-username/pathfinder-nz.git
+git clone https://github.com/Dayoung3460/pathfinder-nz.git
 cd pathfinder-nz
 
 # Set up environment variables
@@ -83,7 +83,7 @@ Open http://localhost:8501 in your browser.
 ### Option 2: Local development
 
 ```bash
-git clone https://github.com/your-username/pathfinder-nz.git
+git clone https://github.com/Dayoung3460/pathfinder-nz.git
 cd pathfinder-nz
 
 # Create virtual environment
