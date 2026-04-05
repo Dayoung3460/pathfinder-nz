@@ -1,6 +1,8 @@
 # Pathfinder NZ
 
-AI-powered New Zealand visa assistant built on official Immigration New Zealand documents.
+NZ visa assistant that answers questions from official Immigration New Zealand documents.
+
+> **Live demo:** https://pathfinder-nz-frontend.onrender.com (Phase 1 — Streamlit UI. React frontend rebuild is in progress.)
 
 ## What it does
 
