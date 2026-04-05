@@ -2,7 +2,7 @@
 
 This file provides context and guidance for Claude Code when working on the Pathfinder NZ project.
 Read this file carefully before writing any code.
-Also read `PRD.md` and `ROADMAP.md` in the project root before starting any task.
+Also read `docs/PRD.md` and `docs/ROADMAP.md` before starting any task.
 
 ---
 
@@ -93,11 +93,13 @@ If the relevant document is not found, respond: "I wasn't able to find specific 
 Every answer must include the source URLs of the INZ documents used to generate the response.
 This is a core trust and reliability feature of the product.
 
-### 4. Disclaimer on every response
-Every response must end with:
-"⚠️ This information is based on official Immigration New Zealand documents and is provided for general guidance only. It is not legal advice. For decisions that may significantly affect your visa status, please consult a licensed immigration adviser."
+### 4. Disclaimer display
+The disclaimer is displayed persistently in the Streamlit sidebar (and will be shown in a fixed location in the React frontend). It is NOT appended to individual chat responses. The LLM system prompts explicitly instruct the model not to include a disclaimer in its output.
 
-### 5. Document refresh pipeline (critical)
+### 5. URL validation before adding
+Before adding any new URL to `backend/rag/urls.py`, you MUST validate that the URL returns a successful HTTP response (2xx). Never add a URL without checking it first. Do not ask the user to validate URLs — handle it yourself before modifying `urls.py`.
+
+### 6. Document refresh pipeline (critical)
 Immigration NZ changes its policies and URLs frequently.
 The document ingestion pipeline must be designed to re-scrape and re-index documents on a scheduled or manual basis, not hardcoded as a one-time load.
 Do not hardcode document content. Always load from URLs.
@@ -131,62 +133,6 @@ pathfinder-nz/
 │   └── chroma_db/            # ChromaDB persistent storage (gitignored)
 └── requirements.txt
 ```
-
----
-
-## INZ Document Sources
-
-Documents are scraped from the following verified URLs.
-All URLs were confirmed accessible as of April 2026.
-
-### Employer / HR
-- https://www.immigration.govt.nz/employ-migrants/new-employer-accreditation-and-work-visa
-- https://www.immigration.govt.nz/employ-migrants/new-employer-accreditation-and-work-visa/accreditation-types-and-employers-requirements
-- https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/aewv-employer-accreditation-and-job-check-process/
-- https://www.immigration.govt.nz/work/for-employers/hiring-people-from-overseas/making-a-job-offer/
-- https://www.immigration.govt.nz/about-us/news-centre/accredited-employer-work-visa-aewv-key-information-and-statistics/
-- https://www.immigration.govt.nz/about-us/news-centre/how-changes-to-the-accredited-employer-work-visa-aewv-may-affect-you/
-
-### AEWV (Work Visa)
-- https://www.immigration.govt.nz/visas/accredited-employer-work-visa/
-- https://www.immigration.govt.nz/new-zealand-visas/already-have-a-visa/your-visa-conditions/variation-of-conditions-temporary-visas/varying-a-work-visa
-- https://www.immigration.govt.nz/formshelp/application-for-a-variation-of-conditions
-- https://www.immigration.govt.nz/work/requirements-for-work-visas/approved-employers/accredited-employer-list/
-
-### Skilled Migrant Category (Residence)
-- https://www.immigration.govt.nz/visas/skilled-migrant-category-resident-visa/
-- https://www.immigration.govt.nz/live/resident-visas-to-live-in-new-zealand/skilled-residence-pathways-in-new-zealand/skilled-migrant-category-pathway-to-residence/
-- https://www.immigration.govt.nz/live/resident-visas-to-live-in-new-zealand/skilled-residence-pathways-in-new-zealand/skilled-migrant-category-pathway-to-residence/pay-rates-for-the-skilled-migrant-category-resident-visa/
-- https://www.immigration.govt.nz/formshelp/smc-eoi-form
-- https://www.immigration.govt.nz/formshelp/smc-visa-application
-- https://www.immigration.govt.nz/about-us/news-centre/further-changes-to-the-skilled-migrant-category-to-come-into-effect-in-august-2026/
-- https://www.immigration.govt.nz/live/resident-visas-to-live-in-new-zealand/skilled-residence-pathways-in-new-zealand/
-- https://www.immigration.govt.nz/process-to-apply/waiting-for-a-visa/interim-visas-so-you-can-stay-here-lawfully/skilled-migrant-category-interim-visa/
-
-### Partner Visas
-- https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/partnership-and-how-to-prove-it/
-- https://www.immigration.govt.nz/about-us/news-centre/partnership-visas/
-- https://www.immigration.govt.nz/visas/partner-of-a-new-zealander-visa/
-- https://www.immigration.govt.nz/visas/partner-of-a-student-work-visa/
-- https://www.immigration.govt.nz/visas/partner-of-a-student-visitor-visa/
-
-### Student Visas
-- https://www.immigration.govt.nz/study/study-visas/
-- https://www.immigration.govt.nz/assist-migrants-and-students/assist-students/student-visa-info
-- https://www.immigration.govt.nz/study/once-you-have-a-student-visa/check-or-change-your-student-visa-conditions/
-- https://www.immigration.govt.nz/about-us/news-centre/upcoming-changes-to-student-visa-work-rights/
-- https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/bringing-family-on-a-student-visa/
-
-### VOC (Variation of Conditions)
-- https://www.immigration.govt.nz/new-zealand-visas/already-have-a-visa/your-visa-conditions/variation-of-conditions-temporary-visas/varying-a-work-visa
-- https://www.immigration.govt.nz/study/once-you-have-a-student-visa/check-or-change-your-student-visa-conditions/
-- https://www.immigration.govt.nz/new-zealand-visas/already-have-a-visa/your-visa-conditions/variation-of-conditions-temporary-visas/varying-a-visitor-visa
-- https://www.immigration.govt.nz/formshelp/application-for-a-variation-of-conditions
-- https://www.immigration.govt.nz/formshelp/application-for-a-variation-of-conditions-student
-
-### General
-- https://www.immigration.govt.nz/new-zealand-visas/preparing-a-visa-application/character-and-identity/good-character/supporting-partner-character
-- https://www.immigration.govt.nz/process-to-apply/waiting-for-a-visa/interim-visas-so-you-can-stay-here-lawfully/interim-visa-conditions/
 
 ---
 
