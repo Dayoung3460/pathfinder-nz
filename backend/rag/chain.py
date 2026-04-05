@@ -5,16 +5,10 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from backend.rag.retriever import get_retriever
+from backend.rag.retriever import retrieve_with_scores
 from backend.prompts.employer import EMPLOYER_SYSTEM_PROMPT
 from backend.prompts.applicant import APPLICANT_SYSTEM_PROMPT
 
-DISCLAIMER = (
-    "\n\n⚠️ This information is based on official Immigration New Zealand documents "
-    "and is provided for general guidance only. It is not legal advice. "
-    "For decisions that may significantly affect your visa status, "
-    "please consult a licensed immigration adviser."
-)
 
 PROMPTS = {
     "employer": EMPLOYER_SYSTEM_PROMPT,
@@ -50,11 +44,11 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
     Returns:
         dict with "answer" (str) and "sources" (list[str]).
     """
-    retriever = get_retriever()
-    docs = retriever.invoke(message)
+    results = retrieve_with_scores(message)
+    docs = [doc for doc, _score in results]
 
     source_urls = _get_source_urls(docs)
-    context = _format_docs(docs)
+    context = _format_docs(docs) if docs else ""
 
     system_prompt = PROMPTS.get(role, APPLICANT_SYSTEM_PROMPT)
 
@@ -75,7 +69,5 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
     if source_urls:
         sources_text = "\n".join(f"- {url}" for url in source_urls)
         answer += f"\n\n📌 Sources:\n{sources_text}"
-
-    answer += DISCLAIMER
 
     return {"answer": answer, "sources": source_urls}
