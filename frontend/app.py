@@ -67,27 +67,39 @@ def show_role_selection():
 
 def show_chat():
     """Display the chat interface."""
+    role_emoji = "🏢" if st.session_state.role == "employer" else "🧳"
     role_label = (
-        "Employer / HR Mode" if st.session_state.role == "employer"
-        else "Visa Applicant Mode"
+        "Employer / HR" if st.session_state.role == "employer"
+        else "Visa Applicant"
     )
 
-    col1, col2 = st.columns([6, 1])
-    with col1:
-        st.title("Pathfinder NZ")
-        st.markdown(f"**{role_label}**")
-    with col2:
-        if st.button("Change Role"):
-            st.session_state.role = None
-            st.session_state.messages = []
-            st.rerun()
+    st.title("Pathfinder NZ")
+
+    header_html = f"""
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: -10px; margin-bottom: 20px;">
+        <span style="
+            background: #f0f2f6;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #31333f;
+        ">{role_emoji} {role_label}</span>
+    </div>
+    """
+    st.markdown(header_html, unsafe_allow_html=True)
+
+    if st.button("↩ Change Role", type="tertiary"):
+        st.session_state.role = None
+        st.session_state.messages = []
+        st.rerun()
 
     # Welcome message with suggested questions
     if not st.session_state.messages:
         st.markdown("**Welcome! Here are some questions you might ask:**")
         for question in SUGGESTED_QUESTIONS[st.session_state.role]:
             if st.button(question, key=question):
-                st.session_state.messages.append({"role": "user", "content": question})
+                st.session_state.pending_question = question
                 st.rerun()
 
     # Display chat history
@@ -95,21 +107,27 @@ def show_chat():
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
+    # Process pending suggested question
+    pending = st.session_state.pop("pending_question", None)
+
     # Chat input
-    if prompt := st.chat_input("Ask a question about New Zealand visas..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
+    prompt = st.chat_input("Ask a question about New Zealand visas...")
+    active_prompt = pending or prompt
+
+    if active_prompt:
+        st.session_state.messages.append({"role": "user", "content": active_prompt})
         with st.chat_message("user"):
-            st.markdown(prompt)
+            st.markdown(active_prompt)
 
         with st.chat_message("assistant"):
-            with st.spinner("Searching INZ documents..."):
-                try:
-                    result = send_message(prompt)
-                    answer = result["answer"]
-                except Exception as e:
-                    answer = f"Sorry, an error occurred: {e}"
-
-            st.markdown(answer)
+            placeholder = st.empty()
+            placeholder.markdown("Searching INZ documents... ⏳")
+            try:
+                result = send_message(active_prompt)
+                answer = result["answer"]
+            except Exception as e:
+                answer = f"Sorry, an error occurred: {e}"
+            placeholder.markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
 
     # Clear conversation button
@@ -122,10 +140,29 @@ def show_chat():
 def main():
     st.set_page_config(page_title="Pathfinder NZ", page_icon="🗺️", layout="centered")
 
+    st.markdown(
+        """
+        <style>
+        /* Hide default Streamlit running indicator and stop button */
+        header [data-testid="stStatusWidget"] { display: none; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     if "role" not in st.session_state:
         st.session_state.role = None
     if "messages" not in st.session_state:
         st.session_state.messages = []
+
+    with st.sidebar:
+        st.markdown("### ⚠️ Disclaimer")
+        st.caption(
+            "This information is based on official Immigration New Zealand "
+            "documents and is provided for general guidance only. It is not "
+            "legal advice. For decisions that may significantly affect your "
+            "visa status, please consult a licensed immigration adviser."
+        )
 
     if st.session_state.role is None:
         show_role_selection()
