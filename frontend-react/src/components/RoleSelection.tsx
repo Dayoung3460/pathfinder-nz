@@ -9,17 +9,17 @@ const ROLE_KEYS: Role[] = ['employer', 'applicant']
 
 export default function RoleSelection({ onSelectRole }: Props) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-8 py-16">
-      <div className="w-full max-w-lg text-center">
-        <h2 className="font-bold text-notion-text tracking-heading-xl leading-none mb-4 text-5xl">
+    <div className="role-selection">
+      <div className="role-selection-inner">
+        <h2 className="role-selection-heading">
           Your guide to<br />New Zealand visas
         </h2>
 
-        <p className="font-semibold text-notion-gray-500 tracking-body-lg leading-snug mb-10 text-xl">
+        <p className="role-selection-tagline">
           Powered by official Immigration New Zealand documents.
         </p>
 
-        <p className="text-[15px] font-semibold text-notion-text mb-5">
+        <p className="role-selection-prompt">
           Select your role to get started:
         </p>
 
@@ -27,22 +27,16 @@ export default function RoleSelection({ onSelectRole }: Props) {
           {ROLE_KEYS.map(key => {
             const { emoji, label, description } = ROLES[key]
             return (
-              <button
-                key={key}
-                onClick={() => onSelectRole(key)}
-                className="bg-white rounded-xl p-6 text-left border border-notion transition-shadow hover:shadow-card focus:outline-none focus:ring-2 focus:ring-notion-blue-focus"
-              >
-                <div className="text-3xl mb-3">{emoji}</div>
-                <div className="text-base font-bold text-notion-text mb-1">{label}</div>
-                <div className="text-sm text-notion-gray-500">{description}</div>
+              <button key={key} onClick={() => onSelectRole(key)} className="role-card">
+                <div className="role-card-emoji">{emoji}</div>
+                <div className="role-card-label">{label}</div>
+                <div className="role-card-description">{description}</div>
               </button>
             )
           })}
         </div>
 
-        <p className="mt-10 text-[13px] leading-relaxed text-notion-gray-300">
-          {DISCLAIMER_TEXT}
-        </p>
+        <p className="role-selection-disclaimer">{DISCLAIMER_TEXT}</p>
       </div>
     </div>
   )

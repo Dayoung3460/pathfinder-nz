@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import Markdown from 'react-markdown'
 import type { Role, Message, ChatResponse } from '../types'
 import { BACKEND_URL, ROLES, SUGGESTED_QUESTIONS } from '../constants'
 
@@ -63,35 +64,33 @@ export default function Chat({ role, onChangeRole }: Props) {
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Header */}
-      <div className="bg-white border-b border-notion flex items-center justify-between px-6 py-3 shrink-0">
-        <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1 rounded-full bg-notion-badge-bg text-notion-badge-txt">
+    <div className="chat-container">
+      <div className="chat-header">
+        <span className="badge-role">
           {roleEmoji} {roleLabel}
         </span>
-        <button
-          onClick={onChangeRole}
-          className="text-sm font-medium text-notion-gray-500 hover:text-notion-text transition-colors focus:outline-none focus:underline"
-        >
-          ↩ Change Role
-        </button>
+        <div className="chat-header-actions">
+          {messages.length > 0 && (
+            <button onClick={() => setMessages([])} className="btn-secondary">
+              Clear Conversation
+            </button>
+          )}
+          <button onClick={onChangeRole} className="btn-outline">
+            ↩ Change Role
+          </button>
+        </div>
       </div>
 
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-2xl mx-auto space-y-4">
+      <div className="chat-messages">
+        <div className="chat-messages-inner">
           {messages.length === 0 && (
             <div>
-              <p className="text-base font-semibold text-notion-text mb-3">
+              <p className="welcome-text">
                 Welcome! Here are some questions you might ask:
               </p>
               <div className="flex flex-col gap-2">
                 {SUGGESTED_QUESTIONS[role].map(q => (
-                  <button
-                    key={q}
-                    onClick={() => sendMessage(q)}
-                    className="text-left bg-white rounded-xl px-4 py-3 text-sm text-notion-blue border border-notion hover:bg-notion-badge-bg transition-colors focus:outline-none focus:ring-2 focus:ring-notion-blue-focus"
-                  >
+                  <button key={q} onClick={() => sendMessage(q)} className="btn-suggestion">
                     {q}
                   </button>
                 ))}
@@ -103,28 +102,17 @@ export default function Chat({ role, onChangeRole }: Props) {
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className="max-w-[85%]">
                 {msg.role === 'user' ? (
-                  <div className="bg-notion-blue text-white rounded-xl rounded-br-sm px-4 py-3 text-[15px] leading-relaxed">
-                    {msg.content}
-                  </div>
+                  <div className="msg-user">{msg.content}</div>
                 ) : (
-                  <div className="bg-white rounded-xl rounded-bl-sm px-4 py-3 border border-notion shadow-card">
-                    <p className="text-[15px] text-notion-text leading-relaxed whitespace-pre-wrap">
-                      {msg.content}
-                    </p>
-                    {msg.sources && msg.sources.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-notion">
-                        <p className="text-[12px] font-semibold text-notion-text mb-1.5">
-                          📌 Sources
-                        </p>
+                  <div className="msg-assistant">
+                    <Markdown>{msg.content}</Markdown>
+                    {msg.sources?.length && (
+                      <div className="msg-sources">
+                        <p className="msg-sources-title">📌 Sources</p>
                         <ul className="space-y-1">
                           {msg.sources.map(src => (
                             <li key={src}>
-                              <a
-                                href={src}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[12px] text-notion-blue hover:underline break-all"
-                              >
+                              <a href={src} target="_blank" rel="noopener noreferrer" className="msg-source-link">
                                 {src}
                               </a>
                             </li>
@@ -140,8 +128,13 @@ export default function Chat({ role, onChangeRole }: Props) {
 
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-white rounded-xl rounded-bl-sm px-4 py-3 border border-notion">
-                <p className="text-sm text-notion-gray-300">Searching INZ documents…</p>
+              <div className="msg-loading">
+                <p className="msg-loading-text">
+                  Searching INZ documents
+                  <span className="inline-flex w-6">
+                    <span className="animate-dots" />
+                  </span>
+                </p>
               </div>
             </div>
           )}
@@ -150,33 +143,18 @@ export default function Chat({ role, onChangeRole }: Props) {
         </div>
       </div>
 
-      {/* Input area */}
-      <div className="bg-white border-t border-notion px-6 py-4 shrink-0">
-        <div className="max-w-2xl mx-auto">
-          {messages.length > 0 && (
-            <div className="flex justify-end mb-2">
-              <button
-                onClick={() => setMessages([])}
-                className="text-[13px] text-notion-gray-300 hover:text-notion-gray-500 transition-colors"
-              >
-                Clear Conversation
-              </button>
-            </div>
-          )}
-          <form onSubmit={handleSubmit} className="flex gap-2">
+      <div className="chat-input-area">
+        <div className="chat-input-inner">
+          <form onSubmit={handleSubmit} className="chat-form">
             <input
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Ask a question about New Zealand visas…"
               disabled={loading}
-              className="flex-1 bg-white border border-notion-input-border rounded px-3 py-2 text-[15px] text-notion-text-soft placeholder-notion-gray-300 focus:outline-none focus:ring-2 focus:ring-notion-blue-focus disabled:opacity-50"
+              className="chat-input"
             />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="bg-notion-blue hover:bg-notion-blue-dark text-white rounded px-4 py-2 text-[15px] font-semibold transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <button type="submit" disabled={loading || !input.trim()} className="btn-primary">
               Send
             </button>
           </form>

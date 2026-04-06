@@ -8,32 +8,22 @@ export default function App() {
   const [role, setRole] = useState<Role | null>(null)
 
   return (
-    <div className="min-h-screen flex font-sans">
-      {/* Sidebar */}
-      <aside className="w-60 shrink-0 border-r border-notion bg-white flex flex-col">
-        <div className="p-6 border-b border-notion">
-          <div className="text-[22px] font-bold tracking-card-title text-notion-text">
-            Pathfinder NZ
-          </div>
-          <div className="text-[13px] mt-0.5 text-notion-gray-500">
-            NZ Visa Assistant
-          </div>
+    <div className="layout">
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <div className="sidebar-title">Pathfinder NZ</div>
+          <div className="sidebar-subtitle">NZ Visa Assistant</div>
         </div>
 
         <div className="p-6 mt-auto">
-          <div className="rounded-xl p-4 border border-notion bg-notion-warm">
-            <div className="text-[12px] font-semibold text-notion-text mb-2">
-              ⚠️ Disclaimer
-            </div>
-            <p className="text-[12px] leading-relaxed text-notion-gray-500">
-              {DISCLAIMER_TEXT}
-            </p>
+          <div className="sidebar-disclaimer">
+            <div className="sidebar-disclaimer-title">⚠️ Disclaimer</div>
+            <p className="sidebar-disclaimer-text">{DISCLAIMER_TEXT}</p>
           </div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col bg-notion-warm">
+      <main className="main-content">
         {role === null ? (
           <RoleSelection onSelectRole={setRole} />
         ) : (
