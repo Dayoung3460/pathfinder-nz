@@ -22,3 +22,15 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+  frontend-react:
+    build:
+      context: .
+      dockerfile: frontend-react/Dockerfile
+      args:
+        VITE_BACKEND_URL: http://localhost:8000
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

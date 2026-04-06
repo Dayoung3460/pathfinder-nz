@@ -33,3 +33,8 @@ Thumbs.db
 docker-compose.override.yml
 
 prompt.md
+
+# React frontend
+frontend-react/node_modules/
+frontend-react/dist/
+frontend-react/.env

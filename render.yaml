@@ -22,3 +22,12 @@ services:
     envVars:
       - key: BACKEND_URL
         value: https://pathfinder-nz-backend.onrender.com
+
+  - type: web
+    name: pathfinder-nz-react
+    runtime: docker
+    dockerfilePath: frontend-react/Dockerfile
+    dockerContext: .
+    plan: free
+    buildArgs:
+      VITE_BACKEND_URL: https://pathfinder-nz-backend.onrender.com
