@@ -107,6 +107,9 @@ def show_chat():
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
+            if msg.get("sources"):
+                sources_text = "\n".join(f"- {url}" for url in msg["sources"])
+                st.markdown(f"\n\n📌 Sources:\n{sources_text}")
 
     # Process pending suggested question
     pending = st.session_state.pop("pending_question", None)
@@ -126,10 +129,16 @@ def show_chat():
             try:
                 result = send_message(active_prompt)
                 answer = result["answer"]
+                sources = result.get("sources", [])
             except Exception as e:
                 answer = f"Sorry, an error occurred: {e}"
-            placeholder.markdown(answer)
-            st.session_state.messages.append({"role": "assistant", "content": answer})
+                sources = []
+            if sources:
+                sources_text = "\n".join(f"- {url}" for url in sources)
+                placeholder.markdown(f"{answer}\n\n📌 Sources:\n{sources_text}")
+            else:
+                placeholder.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer, "sources": sources})
 
     # Clear conversation button
     if st.session_state.messages:

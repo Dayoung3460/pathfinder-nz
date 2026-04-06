@@ -66,8 +66,4 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
 
     answer = chain.invoke({"context": context, "question": message})
 
-    if source_urls:
-        sources_text = "\n".join(f"- {url}" for url in source_urls)
-        answer += f"\n\n📌 Sources:\n{sources_text}"
-
     return {"answer": answer, "sources": source_urls}
