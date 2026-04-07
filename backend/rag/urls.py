@@ -5,16 +5,21 @@ Update this file when INZ restructures or moves pages.
 """
 
 EMPLOYER_URLS = [
+    "https://www.immigration.govt.nz/work/for-employers/",
+    "https://www.immigration.govt.nz/work/for-employers/hiring-people-from-overseas/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/",
     "https://www.immigration.govt.nz/employ-migrants/new-employer-accreditation-and-work-visa",
     "https://www.immigration.govt.nz/employ-migrants/new-employer-accreditation-and-work-visa/accreditation-types-and-employers-requirements",
     "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/aewv-employer-accreditation-and-job-check-process/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/applying-for-a-job-check-process-steps/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/applying-for-a-job-check-process-steps/how-we-calculate-pay-rates-for-the-aewv/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/applying-for-a-job-check-process-steps/engaging-with-work-and-income-before-your-job-check/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/recruiting-and-supporting-a-migrant-to-apply-for-an-aewv-process-steps/",
+    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/recruiting-and-supporting-a-migrant-to-apply-for-an-aewv-process-steps/check-if-a-migrant-applicant-is-suitably-qualified-for-an-aewv/",
     "https://www.immigration.govt.nz/work/for-employers/hiring-people-from-overseas/making-a-job-offer/",
     "https://www.immigration.govt.nz/about-us/news-centre/accredited-employer-work-visa-aewv-key-information-and-statistics/",
     "https://www.immigration.govt.nz/about-us/news-centre/how-changes-to-the-accredited-employer-work-visa-aewv-may-affect-you/",
-    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/",
-    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/applying-for-a-job-check-process-steps/how-we-calculate-pay-rates-for-the-aewv/",
-    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/applying-for-a-job-check-process-steps/engaging-with-work-and-income-before-your-job-check/",
-    "https://www.immigration.govt.nz/work/for-employers/getting-accreditation-or-approval-to-hire/employer-accreditation-for-the-aewv/recruiting-and-supporting-a-migrant-to-apply-for-an-aewv-process-steps/check-if-a-migrant-applicant-is-suitably-qualified-for-an-aewv/",
     "https://www.immigration.govt.nz/employ-migrants/new-employer-accreditation-and-work-visa/passing-the-job-check/sector-agreements-and-hiring-migrants-on-an-aewv",
     "https://www.immigration.govt.nz/about-us/news-centre/changes-to-the-accredited-employer-work-visa-aewv/",
     "https://www.immigration.govt.nz/about-us/news-centre/changes-to-the-accredited-employer-work-visa-aewv-and-median-wage/",
@@ -44,9 +49,12 @@ SMC_URLS = [
 PARTNER_URLS = [
     "https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/partnership-and-how-to-prove-it/",
     "https://www.immigration.govt.nz/about-us/news-centre/partnership-visas/",
-
+    "https://www.immigration.govt.nz/visas/partner-of-a-new-zealander-resident-visa/",
+    "https://www.immigration.govt.nz/visas/partner-of-a-new-zealander-work-visa/",
+    "https://www.immigration.govt.nz/visas/partner-of-a-new-zealander-visitor-visa/",
     "https://www.immigration.govt.nz/visas/partner-of-a-student-work-visa/",
     "https://www.immigration.govt.nz/visas/partner-of-a-student-visitor-visa/",
+    "https://www.immigration.govt.nz/visas/partner-of-a-worker-work-visa/",
 ]
 
 STUDENT_URLS = [
@@ -66,7 +74,9 @@ VISITOR_URLS = [
     "https://www.immigration.govt.nz/visas/visitor-visa",
 ]
 
-WORKING_HOLIDAY_URLS = []
+WORKING_HOLIDAY_URLS = [
+    "https://www.immigration.govt.nz/work/working-holiday-visas/",
+]
 
 POST_STUDY_WORK_URLS = [
     "https://www.immigration.govt.nz/visas/post-study-work-visa",
@@ -95,12 +105,15 @@ FAMILY_URLS = [
     "https://www.immigration.govt.nz/process-to-apply/once-you-have-a-visa/bringing-family-to-new-zealand/dependent-children/",
 ]
 
-APPLICATION_PROCESS_URLS = []
+APPLICATION_PROCESS_URLS = [
+    "https://www.immigration.govt.nz/process-to-apply/waiting-for-a-visa/",
+]
 
 REFUGEE_URLS = []
 
 ENTREPRENEUR_INVESTOR_URLS = [
     "https://www.immigration.govt.nz/visas/entrepreneur-work-visa",
+    "https://www.immigration.govt.nz/visas/entrepreneur-resident-visa/",
 ]
 
 TRANSIT_URLS = [
