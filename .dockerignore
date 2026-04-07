@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node
+frontend-react/node_modules/
+frontend-react/dist/
+
+# ChromaDB (backend mounts this as a volume at runtime)
+data/
+
+# Environment
+.env
+*.local
+
+# IDE / OS
+.idea/
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Docs / misc
+docs/
+*.md
+prompt.md
