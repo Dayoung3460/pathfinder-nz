@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY frontend-react/ ./
 
-ARG VITE_BACKEND_URL
+ARG VITE_BACKEND_URL=https://pathfinder-nz-backend.onrender.com
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 
 RUN npm run build

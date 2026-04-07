@@ -29,5 +29,3 @@ services:
     dockerfilePath: frontend-react/Dockerfile
     dockerContext: .
     plan: free
-    buildArgs:
-      VITE_BACKEND_URL: https://pathfinder-nz-backend.onrender.com
