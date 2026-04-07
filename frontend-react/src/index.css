@@ -164,7 +164,8 @@ body {
 }
 
 .msg-assistant {
-  @apply bg-white rounded-xl rounded-bl-sm px-4 py-3 border border-notion shadow-card prose prose-sm max-w-none text-notion-text;
+  @apply bg-white rounded-xl rounded-bl-sm border border-notion shadow-card prose prose-sm max-w-none text-notion-text;
+  padding: 1.75rem 1rem;
 }
 
 .msg-sources {
