@@ -10,7 +10,6 @@ env/
 frontend-react/node_modules/
 frontend-react/dist/
 
-# ChromaDB — NOT ignored, backend needs data/chroma_db/ in the image
 
 # Environment
 .env
