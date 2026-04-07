@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node
+frontend-react/node_modules/
+frontend-react/dist/
+
+# ChromaDB — NOT ignored, backend needs data/chroma_db/ in the image
+
+# Environment
+.env
+*.local
+
+# IDE / OS
+.idea/
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+
+# Docs / misc
+docs/
+*.md
+prompt.md
