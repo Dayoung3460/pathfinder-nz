@@ -15,6 +15,8 @@ PROMPTS = {
     "applicant": APPLICANT_SYSTEM_PROMPT,
 }
 
+_llm = ChatAnthropic(model="claude-haiku-4-5-20251001", max_tokens=1024)
+
 
 def _format_docs(docs):
     """Format retrieved documents into a single context string."""
@@ -60,9 +62,7 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
 
     prompt = ChatPromptTemplate.from_messages(chat_messages)
 
-    llm = ChatAnthropic(model="claude-haiku-4-5-20251001", max_tokens=1024)
-
-    chain = prompt | llm | StrOutputParser()
+    chain = prompt | _llm | StrOutputParser()
 
     answer = chain.invoke({"context": context, "question": message})
 

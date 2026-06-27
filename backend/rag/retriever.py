@@ -13,18 +13,22 @@ from backend.config import GOOGLE_API_KEY, CHROMA_DB_PATH
 # so irrelevant sources aren't shown to the user.
 RELEVANCE_THRESHOLD = 0.70
 
+_vectorstore: Chroma | None = None
 
-def get_vectorstore():
-    """Return the ChromaDB vectorstore instance."""
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/gemini-embedding-001",
-        google_api_key=GOOGLE_API_KEY,
-    )
 
-    return Chroma(
-        persist_directory=CHROMA_DB_PATH,
-        embedding_function=embeddings,
-    )
+def get_vectorstore() -> Chroma:
+    """Return the shared ChromaDB vectorstore instance (initialised once)."""
+    global _vectorstore
+    if _vectorstore is None:
+        embeddings = GoogleGenerativeAIEmbeddings(
+            model="models/gemini-embedding-001",
+            google_api_key=GOOGLE_API_KEY,
+        )
+        _vectorstore = Chroma(
+            persist_directory=CHROMA_DB_PATH,
+            embedding_function=embeddings,
+        )
+    return _vectorstore
 
 
 def retrieve_with_scores(query: str, k: int = 5):
