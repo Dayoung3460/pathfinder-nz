@@ -58,6 +58,11 @@ export default function Chat({ role, onChangeRole }: Props) {
     }
   }
 
+  const handleStop = () => {
+    abortRef.current?.abort()
+    setLoading(false)
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     sendMessage(input)
@@ -154,9 +159,15 @@ export default function Chat({ role, onChangeRole }: Props) {
               disabled={loading}
               className="chat-input"
             />
-            <button type="submit" disabled={loading || !input.trim()} className="btn-primary">
-              Send
-            </button>
+            {loading ? (
+              <button type="button" onClick={handleStop} className="btn-stop">
+                ■ Stop
+              </button>
+            ) : (
+              <button type="submit" disabled={!input.trim()} className="btn-primary">
+                Send
+              </button>
+            )}
           </form>
         </div>
       </div>
