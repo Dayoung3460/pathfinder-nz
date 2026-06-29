@@ -167,8 +167,14 @@ def refresh_documents() -> dict:
 
     if failures:
         send_slack_alert(
-            f"Pathfinder NZ document refresh completed with {failed} failure(s): "
-            + ", ".join(failures)
+            f"⚠️ Pathfinder NZ refresh completed with {failed} failure(s).\n"
+            f"Checked: {checked} | Updated: {updated} | Skipped: {skipped} | Failed: {failed}\n"
+            f"Failed URLs:\n" + "\n".join(f"• {u}" for u in failures)
+        )
+    else:
+        send_slack_alert(
+            f"✅ Pathfinder NZ refresh complete.\n"
+            f"Checked: {checked} | Updated: {updated} | Skipped: {skipped}"
         )
 
     logger.info(
