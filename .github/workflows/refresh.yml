@@ -11,10 +11,12 @@ jobs:
     steps:
       - name: Trigger refresh
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+          response=$(curl -s -o body.json -w "%{http_code}" -X POST \
+            --max-time 600 \
             "${{ secrets.BACKEND_URL }}/admin/refresh" \
             -H "Authorization: Bearer ${{ secrets.REFRESH_SECRET }}")
           echo "Response status: $response"
+          cat body.json
           if [ "$response" != "200" ]; then
             echo "Refresh trigger failed with status $response"
             exit 1
