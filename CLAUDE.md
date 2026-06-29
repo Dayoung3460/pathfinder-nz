@@ -167,11 +167,13 @@ Wait for the user's confirmation before proceeding with QA.
 
 
 
+## Agent Dispatch
+
 Agents are defined in `.claude/agents/`. **Always automatically select and use the most appropriate agent(s) for each task. Never wait for the user to specify which agent to use.**
 
-For tasks that span multiple areas, use multiple agents in sequence.
+### Agent selection table
 
-| Task type | Agent to use |
+| Task type | Agent |
 |---|---|
 | Scraping INZ pages, ChromaDB ingestion, URL config | `document-ingestion-agent` |
 | RAG chain, retriever, LLM connection, answer quality | `rag-chain-agent` |
@@ -180,6 +182,13 @@ For tasks that span multiple areas, use multiple agents in sequence.
 | Streamlit UI, role selection, chat interface | `streamlit-ui-agent` |
 | Dockerfile, docker-compose, volumes, env vars | `docker-agent` |
 | Testing, QA, grounding verification, edge cases | `qa-agent` |
+
+### Execution rules
+
+- Always spawn agents with `isolation: "worktree"` so each agent works on an isolated git branch and changes don't conflict with the main worktree.
+- When tasks touch different files and have no dependencies between them, spawn agents with `run_in_background: true` to run in parallel.
+- When task B depends on task A's output (e.g. QA after a fix), run sequentially — wait for A to complete before spawning B.
+- After all agents complete, review each branch diff before merging to the main worktree.
 
 ---
 
