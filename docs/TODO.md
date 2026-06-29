@@ -18,7 +18,7 @@ Priority levels: **P0** Critical · **P1** High · **P2** Medium · **P3** Low
 | # | Priority | Task | Detail |
 |---|---|---|---|
 | ~~P1~~ | ~~**P1**~~ | ~~Show INZ page title alongside source URLs~~ | ✅ Done — title stored as metadata in `ingest.py`, returned from chain as `{url, title}`, API updated to `SourceItem`, frontend displays `[title] — url`. |
-| P2 | **P1** | Add automated tests | No test files exist. At minimum: unit tests for `get_rag_response`, `retrieve_with_scores`, and integration test for the `/chat` endpoint. QA agent is defined but unused. |
+| ~~P2~~ | ~~**P1**~~ | ~~Add automated tests~~ | ✅ Done — 57 tests in `backend/tests/`: unit tests for `retrieve_with_scores` (11), `get_rag_response` (21), and `/chat` integration tests (25). Run: `cd backend && python -m pytest tests/ -v`. |
 
 ---
 
