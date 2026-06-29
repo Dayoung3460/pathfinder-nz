@@ -1,5 +1,7 @@
 """Chat endpoint for the Pathfinder NZ API."""
 
+import asyncio
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -25,7 +27,8 @@ async def chat(request: ChatRequest):
     if request.role not in ("employer", "applicant"):
         raise HTTPException(status_code=400, detail="Role must be 'employer' or 'applicant'.")
 
-    result = get_rag_response(
+    result = await asyncio.to_thread(
+        get_rag_response,
         message=request.message,
         role=request.role,
         history=request.history,
