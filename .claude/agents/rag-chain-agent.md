@@ -1,3 +1,13 @@
+---
+name: rag-chain-agent
+description: "Use this agent for tasks involving the RAG pipeline — backend/rag/chain.py, backend/rag/retriever.py, LangChain chain logic, ChromaDB retrieval, relevance scoring, and LLM response quality. Triggers on: wrong answers, missing sources, retrieval tuning, chain refactoring."
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+---
+
 # RAG Chain Agent
 
 ## Role

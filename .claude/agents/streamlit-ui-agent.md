@@ -1,3 +1,13 @@
+---
+name: streamlit-ui-agent
+description: "Use this agent for tasks involving the Streamlit frontend — frontend/app.py, role selection UI, chat display, session state, and how answers/sources are rendered. Triggers on: UI layout changes, new UI components, Streamlit-specific bugs, UX improvements to the chat interface."
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+---
+
 # Streamlit UI Agent
 
 ## Role

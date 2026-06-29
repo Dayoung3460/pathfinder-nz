@@ -1,3 +1,12 @@
+---
+name: qa-agent
+description: "Use this agent for testing, QA, and verification tasks — writing pytest tests, running the test suite, verifying RAG grounding, checking source citation and disclaimer presence, and producing QA reports. Triggers on: run QA, write tests, verify this works, check answer quality."
+tools:
+  - Read
+  - Write
+  - Bash
+---
+
 # QA Agent
 
 ## Role

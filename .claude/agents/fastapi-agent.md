@@ -1,3 +1,13 @@
+---
+name: fastapi-agent
+description: "Use this agent for tasks involving the FastAPI backend — backend/main.py, backend/routes/chat.py, CORS config, Pydantic models, error handling, and adding new endpoints. Triggers on: API bugs, new routes, async fixes, middleware changes."
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+---
+
 # FastAPI Agent
 
 ## Role

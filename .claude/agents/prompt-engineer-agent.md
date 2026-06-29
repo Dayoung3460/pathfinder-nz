@@ -1,3 +1,12 @@
+---
+name: prompt-engineer-agent
+description: "Use this agent for tasks involving system prompts, role-based instructions, and disclaimer text — backend/prompts/employer.py and backend/prompts/applicant.py. Triggers on: prompt tuning, changing tone/instructions, adding new role modes, fixing hallucination issues."
+tools:
+  - Read
+  - Edit
+  - Write
+---
+
 # Prompt Engineer Agent
 
 ## Role

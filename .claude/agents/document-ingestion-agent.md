@@ -1,3 +1,13 @@
+---
+name: document-ingestion-agent
+description: "Use this agent for tasks involving INZ document scraping, ChromaDB ingestion, URL validation, and managing backend/rag/urls.py. Triggers on: adding/removing URLs, re-ingesting documents, fixing ingestion pipeline, updating chunk settings."
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+---
+
 # Document Ingestion Agent
 
 ## Role

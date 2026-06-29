@@ -1,3 +1,13 @@
+---
+name: docker-agent
+description: "Use this agent for tasks involving Docker and Docker Compose — Dockerfile, docker-compose.yml, volume mounts, .env wiring, and container startup issues. Triggers on: container build errors, adding new services, port mapping changes, deployment config."
+tools:
+  - Read
+  - Edit
+  - Write
+  - Bash
+---
+
 # Docker Agent
 
 ## Role
