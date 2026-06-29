@@ -27,19 +27,9 @@ services:
   - type: cron
     name: pathfinder-nz-refresh
     runtime: docker
-    dockerfilePath: backend/Dockerfile
+    dockerfilePath: Dockerfile.cron
     dockerContext: .
     schedule: "0 3 * * 1"
-    startCommand: >
-      python -c "
-      import os, requests;
-      r = requests.post(
-        os.environ['BACKEND_URL'] + '/admin/refresh',
-        headers={'Authorization': 'Bearer ' + os.environ['REFRESH_SECRET']},
-        timeout=30
-      );
-      print(r.status_code, r.text)
-      "
     envVars:
       - key: BACKEND_URL
         value: https://pathfinder-nz-backend.onrender.com
