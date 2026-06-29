@@ -48,12 +48,12 @@ Two distinct user roles, selected at the start of each session:
 
 | Layer | Technology |
 |---|---|
-| Language | Python |
-| LLM | Anthropic Claude API (claude-sonnet-4-20250514) |
+| Language | Python, TypeScript |
+| LLM | Anthropic Claude API (`claude-haiku-4-5-20251001`) |
 | Agent / Chain | LangChain |
 | Vector DB | ChromaDB |
 | Backend API | FastAPI |
-| Frontend UI | Streamlit |
+| Frontend UI | React + Vite + Tailwind CSS (primary), Streamlit (legacy) |
 | Containerisation | Docker |
 
 ---
@@ -61,7 +61,7 @@ Two distinct user roles, selected at the start of each session:
 ## Architecture Overview
 
 ```
-User (Streamlit UI)
+User (React UI — primary)
     ↓
 Role Selection (Employer / Visa Applicant)
     ↓
@@ -72,7 +72,7 @@ LangChain RAG Pipeline
 ChromaDB   Anthropic Claude API
 (INZ docs)
     ↓
-Answer + Source URLs returned to UI
+Answer + Source URLs (with page titles) returned to UI
 ```
 
 ---
@@ -128,7 +128,22 @@ pathfinder-nz/
 │   │   └── applicant.py      # System prompt for visa applicant mode
 │   └── config.py             # Environment variables and settings
 ├── frontend/
-│   └── app.py                # Streamlit UI
+│   └── app.py                # Streamlit UI (legacy)
+├── frontend-react/           # Primary React frontend (Vite + Tailwind CSS)
+│   ├── src/
+│   │   ├── App.tsx           # Root component
+│   │   ├── main.tsx          # Entry point
+│   │   ├── types.ts          # Shared TypeScript types
+│   │   ├── constants.ts      # App-wide constants
+│   │   └── components/
+│   │       ├── Chat.tsx      # Chat interface with message history
+│   │       └── RoleSelection.tsx  # Role selection screen
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── tailwind.config.cjs
+│   └── tsconfig.json
 ├── data/
 │   └── chroma_db/            # ChromaDB persistent storage (gitignored)
 └── requirements.txt

@@ -27,7 +27,7 @@ Priority levels: **P0** Critical · **P1** High · **P2** Medium · **P3** Low
 | # | Priority | Task | Detail |
 |---|---|---|---|
 | ~~M1~~ | ~~**P2**~~ | ~~Add `/health` endpoint to FastAPI~~ | ✅ Done — `GET /health` added to `main.py`. |
-| M2 | **P2** | Update `CLAUDE.md` project structure | `frontend-react/` directory is missing from the project structure section in `CLAUDE.md`. |
+| ~~M2~~ | ~~**P2**~~ | ~~Update `CLAUDE.md` project structure~~ | ✅ Done — `frontend-react/` added to Project Structure; Tech Stack and Architecture Overview updated to reflect React as primary frontend. |
 | M3 | **P3** | Resolve model inconsistency between docs | `CLAUDE.md` specifies `claude-haiku-4-5-20251001`, PRD specifies `claude-sonnet-4-20250514`. Align both documents with whichever model is actually in use. |
 
 ---
