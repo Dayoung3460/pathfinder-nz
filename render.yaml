@@ -12,6 +12,10 @@ services:
         sync: false
       - key: CHROMA_DB_PATH
         value: ./data/chroma_db
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: REFRESH_SECRET
+        sync: false
 
   - type: web
     name: pathfinder-nz-frontend
@@ -19,3 +23,25 @@ services:
     dockerfilePath: frontend-react/Dockerfile
     dockerContext: .
     plan: free
+
+  - type: cron
+    name: pathfinder-nz-refresh
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: .
+    schedule: "0 3 * * 1"
+    startCommand: >
+      python -c "
+      import os, requests;
+      r = requests.post(
+        os.environ['BACKEND_URL'] + '/admin/refresh',
+        headers={'Authorization': 'Bearer ' + os.environ['REFRESH_SECRET']},
+        timeout=30
+      );
+      print(r.status_code, r.text)
+      "
+    envVars:
+      - key: BACKEND_URL
+        value: https://pathfinder-nz-backend.onrender.com
+      - key: REFRESH_SECRET
+        sync: false

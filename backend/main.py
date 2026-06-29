@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import REFRESH_INTERVAL_HOURS
 from backend.rag.refresh import refresh_documents
+from backend.routes.admin import router as admin_router
 from backend.routes.chat import router as chat_router
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
+app.include_router(admin_router)
 
 
 @app.get("/")
