@@ -36,7 +36,7 @@ Priority levels: **P0** Critical · **P1** High · **P2** Medium · **P3** Low
 
 | # | Priority | Task | Detail |
 |---|---|---|---|
-| F1 | **P2** | Scheduled document refresh pipeline | Auto re-scrape all INZ URLs on a weekly basis. Add change detection to skip pages whose content hasn't changed. Requires always-on server. Include failure alerting (Slack webhook or similar). |
+| ~~F1~~ | ~~**P2**~~ | ~~Scheduled document refresh pipeline~~ | ✅ Done — `backend/rag/refresh.py` added with SHA-256 content hashing per URL; changed pages are re-ingested, unchanged pages skipped; Slack webhook alert on failures (`SLACK_WEBHOOK_URL`); APScheduler runs weekly via FastAPI lifespan (`REFRESH_INTERVAL_HOURS`, default 168h). |
 | F2 | **P2** | Cloud deployment | Deploy to Render / Railway / AWS. `render.yaml` exists but deployment has not been completed. |
 | F3 | **P2** | RAG answer quality evaluation framework | Build an eval set of known Q&A pairs from INZ documents. Measure retrieval recall and answer correctness. Needed to validate changes to the RAG pipeline. |
 | F4 | **P3** | Conversation memory across sessions | Currently conversation history resets on page reload. Persist messages to localStorage (frontend) or a lightweight DB (backend). |
