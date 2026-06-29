@@ -10,3 +10,4 @@ streamlit
 python-dotenv
 requests
 beautifulsoup4
+apscheduler>=3.10
