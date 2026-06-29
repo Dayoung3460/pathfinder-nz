@@ -13,12 +13,19 @@ export default function Chat({ role, onChangeRole }: Props) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const lastAssistantRef = useRef<HTMLDivElement>(null)
+  const prevLoadingRef = useRef(false)
   const abortRef = useRef<AbortController | null>(null)
 
   const { label: roleLabel, emoji: roleEmoji } = ROLES[role]
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (prevLoadingRef.current && !loading) {
+      lastAssistantRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+    prevLoadingRef.current = loading
   }, [messages, loading])
 
   useEffect(() => {
@@ -104,7 +111,11 @@ export default function Chat({ role, onChangeRole }: Props) {
           )}
 
           {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div
+              key={i}
+              ref={msg.role === 'assistant' && i === messages.length - 1 ? lastAssistantRef : null}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
               <div className="max-w-[85%]">
                 {msg.role === 'user' ? (
                   <div className="msg-user">{msg.content}</div>
