@@ -127,9 +127,9 @@ export default function Chat({ role, onChangeRole }: Props) {
                         <p className="msg-sources-title">📌 Sources</p>
                         <ul className="space-y-1">
                           {msg.sources.map(src => (
-                            <li key={src}>
-                              <a href={src} target="_blank" rel="noopener noreferrer" className="msg-source-link">
-                                {src}
+                            <li key={src.url}>
+                              <a href={src.url} target="_blank" rel="noopener noreferrer" className="msg-source-link">
+                                {src.title ? `${src.title} — ${src.url}` : src.url}
                               </a>
                             </li>
                           ))}
