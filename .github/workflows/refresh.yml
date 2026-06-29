@@ -1,0 +1,21 @@
+name: Weekly document refresh
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"  # Every Monday at 03:00 UTC
+  workflow_dispatch:      # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger refresh
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            "${{ secrets.BACKEND_URL }}/admin/refresh" \
+            -H "Authorization: Bearer ${{ secrets.REFRESH_SECRET }}")
+          echo "Response status: $response"
+          if [ "$response" != "200" ]; then
+            echo "Refresh trigger failed with status $response"
+            exit 1
+          fi

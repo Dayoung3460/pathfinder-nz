@@ -23,15 +23,3 @@ services:
     dockerfilePath: frontend-react/Dockerfile
     dockerContext: .
     plan: free
-
-  - type: cron
-    name: pathfinder-nz-refresh
-    runtime: docker
-    dockerfilePath: Dockerfile.cron
-    dockerContext: .
-    schedule: "0 3 * * 1"
-    envVars:
-      - key: BACKEND_URL
-        value: https://pathfinder-nz-backend.onrender.com
-      - key: REFRESH_SECRET
-        sync: false
