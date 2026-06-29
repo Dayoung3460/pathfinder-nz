@@ -23,16 +23,19 @@ def _format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
 
-def _get_source_urls(docs):
-    """Extract unique source URLs from retrieved documents."""
+def _get_sources(docs):
+    """Extract unique sources (url + title) from retrieved documents."""
     seen = set()
-    urls = []
+    sources = []
     for doc in docs:
         url = doc.metadata.get("source", "")
         if url and url not in seen:
             seen.add(url)
-            urls.append(url)
-    return urls
+            sources.append({
+                "url": url,
+                "title": (doc.metadata.get("title") or "").strip(),
+            })
+    return sources
 
 
 def get_rag_response(message: str, role: str, history: list[dict] | None = None) -> dict:
@@ -44,12 +47,12 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
         history: Optional list of previous messages [{"role": ..., "content": ...}].
 
     Returns:
-        dict with "answer" (str) and "sources" (list[str]).
+        dict with "answer" (str) and "sources" (list[dict]).
     """
     results = retrieve_with_scores(message)
     docs = [doc for doc, _score in results]
 
-    source_urls = _get_source_urls(docs)
+    sources = _get_sources(docs)
     context = _format_docs(docs) if docs else ""
 
     system_prompt = PROMPTS.get(role, APPLICANT_SYSTEM_PROMPT)
@@ -66,4 +69,4 @@ def get_rag_response(message: str, role: str, history: list[dict] | None = None)
 
     answer = chain.invoke({"context": context, "question": message})
 
-    return {"answer": answer, "sources": source_urls}
+    return {"answer": answer, "sources": sources}

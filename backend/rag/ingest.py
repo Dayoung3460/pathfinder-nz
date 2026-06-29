@@ -55,7 +55,9 @@ def ingest_documents(resume: bool = False) -> None:
             loader = WebBaseLoader(url)
             docs = loader.load()
             for doc in docs:
+                title = (doc.metadata.get("title") or "").strip()
                 doc.metadata["source"] = url
+                doc.metadata["title"] = title
             documents.extend(docs)
             logger.info("Loaded: %s", url)
         except Exception as e:

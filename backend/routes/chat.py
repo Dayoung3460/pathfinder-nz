@@ -16,9 +16,14 @@ class ChatRequest(BaseModel):
     history: list[dict] = []
 
 
+class SourceItem(BaseModel):
+    url: str
+    title: str
+
+
 class ChatResponse(BaseModel):
     answer: str
-    sources: list[str]
+    sources: list[SourceItem]
 
 
 @router.post("/chat", response_model=ChatResponse)
