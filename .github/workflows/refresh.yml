@@ -1,9 +1,7 @@
-name: Weekly document refresh
+name: Manual document refresh
 
 on:
-  schedule:
-    - cron: "0 3 * * 1"  # Every Monday at 03:00 UTC
-  workflow_dispatch:      # Allow manual trigger from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   refresh:
@@ -12,7 +10,7 @@ jobs:
       - name: Trigger refresh
         run: |
           response=$(curl -s -o body.json -w "%{http_code}" -X POST \
-            --max-time 600 \
+            --max-time 1800 \
             "${{ secrets.BACKEND_URL }}/admin/refresh" \
             -H "Authorization: Bearer ${{ secrets.REFRESH_SECRET }}")
           echo "Response status: $response"
