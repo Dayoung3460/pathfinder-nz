@@ -15,9 +15,8 @@ env/
 # Environment variables
 .env
 
-# ChromaDB persistent storage (committed for Render deployment)
+# ChromaDB — committed so Render Docker image includes the data
 # data/chroma_db/
-data/chroma_db/chroma.sqlite3
 
 # Claude Code
 .claude/settings.local.json
