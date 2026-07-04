@@ -4,9 +4,9 @@ This document outlines the current state of the project and planned future impro
 
 ---
 
-## Phase 1 — MVP (Current)
+## Phase 1 — MVP
 
-**Status: In Progress**
+**Status: Complete**
 
 Build a fully functional RAG-based visa assistant with a simple Streamlit UI.
 
@@ -27,11 +27,11 @@ Build a fully functional RAG-based visa assistant with a simple Streamlit UI.
 
 ---
 
-## Phase 2 — React Frontend Rebuild (Planned)
+## Phase 2 — React Frontend Rebuild
 
-**Status: Planned**
+**Status: Complete**
 
-Replace Streamlit with a production-quality React frontend using a DESIGN.md-driven design system.
+Replaced Streamlit with a production-quality React frontend (Vite + Tailwind CSS) in `frontend-react/`. The React app is now the primary frontend deployed on Render; the Streamlit UI remains in `frontend/` as legacy. The FastAPI backend was reused unchanged.
 
 ### Why
 Streamlit is sufficient for MVP and demo purposes, but has limitations in UI customisation. A React frontend will:
@@ -72,29 +72,18 @@ Only the frontend changes. The FastAPI backend (`/chat` endpoint) remains untouc
 
 ---
 
-## Phase 3 — Production Readiness (Future)
+## Phase 3 — Production Readiness
 
-**Status: Future Consideration**
+**Status: In Progress**
 
-Further improvements after Phase 2 is complete.
+### Completed
+- Document refresh pipeline with Slack alerting on every run
+  - Implemented as a scheduled job first (Render Cron, then GitHub Actions weekly), then deliberately switched to manual refresh — scheduled runs re-ingested regardless of whether INZ content had changed, which was wasteful on the free tier
+- Deployment to Render (React frontend + FastAPI backend, ChromaDB snapshot committed for deploys)
+- Automated tests for the retriever, RAG chain, and chat endpoint
 
-- Scheduled document refresh pipeline (auto re-scrape INZ URLs weekly)
-  - Note: scheduler runs regardless of whether INZ content has changed (wasteful)
-  - Consider adding change detection first to avoid unnecessary re-ingestion
-  - Requires always-on server (cloud deployment) to work reliably
-  - Must include failure alerting via Slack or other messenger (webhook) so silent failures don't go unnoticed
+### Remaining
+- Change detection before re-ingestion, so refresh can be safely re-automated
 - Conversation memory across sessions
-- Deployment to a cloud platform (e.g., Render, Railway, or AWS)
 - Analytics to track most common questions
 - Evaluation framework to measure RAG answer quality
-
----
-
-## Notes for Claude Code
-
-When working on Phase 2:
-1. Read the chosen DESIGN.md file before writing any React components
-2. Do not modify any files in `backend/` — the FastAPI backend is reused as-is
-3. Create the React app in a new `frontend-react/` directory
-4. Ensure CORS is working before building UI components
-5. Replicate all features from the Streamlit UI: role selection, chat, source citation, disclaimer
