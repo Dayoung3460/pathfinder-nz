@@ -1,0 +1,15 @@
+name: Weekly refresh reminder
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"  # Every Monday at 03:00 UTC
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack reminder
+        run: |
+          curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"text": "📋 Pathfinder NZ — weekly document refresh due.\n1. Run locally: `python -m backend.rag.ingest`\n2. Commit and push `data/chroma_db/` to trigger a Render redeploy."}'
