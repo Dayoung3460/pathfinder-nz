@@ -122,7 +122,7 @@ export default function Chat({ role, onChangeRole }: Props) {
                 ) : (
                   <div className="msg-assistant">
                     <Markdown>{msg.content}</Markdown>
-                    {msg.sources?.length && (
+                    {msg.sources && msg.sources.length > 0 && (
                       <div className="msg-sources">
                         <p className="msg-sources-title">📌 Sources</p>
                         <ul className="space-y-1">
