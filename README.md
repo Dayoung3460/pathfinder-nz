@@ -101,15 +101,40 @@ cp .env.example .env
 
 # Ingest INZ documents into ChromaDB (first time only)
 python -m backend.rag.ingest
+```
 
-# Start the backend
-uvicorn backend.main:app --port 8000
+Then start both dev servers with one command (Ctrl+C stops both):
 
-# Start the frontend (in a separate terminal)
+```bash
+./dev.sh
+```
+
+Or run them in separate terminals:
+
+```bash
+# Terminal 1 — backend (FastAPI on http://localhost:8000)
+uvicorn backend.main:app --reload
+
+# Terminal 2 — frontend (React + Vite)
+cd frontend-react
+npm install   # first time only
+npm run dev
+```
+
+Open the URL Vite prints (usually http://localhost:5173) in your browser.
+
+> Troubleshooting: if the chatbot replies "Sorry, an error occurred. Please try again.", check the backend is running: `curl http://localhost:8000/health`
+
+<details>
+<summary>Legacy Streamlit UI</summary>
+
+```bash
 streamlit run frontend/app.py
 ```
 
 Open http://localhost:8501 in your browser.
+
+</details>
 
 ### Environment Variables
 
