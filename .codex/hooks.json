@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/cleanup-worktrees.sh",
+            "statusMessage": "Cleaning up merged worktrees..."
+          }
+        ]
+      }
+    ]
+  }
+}
