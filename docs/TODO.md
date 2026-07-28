@@ -1,5 +1,7 @@
 # TODO — Pathfinder NZ
 
+no.p3 gogo
+
 Priority levels: **P0** Critical · **P1** High · **P2** Medium · **P3** Low
 
 ---
@@ -36,8 +38,8 @@ Priority levels: **P0** Critical · **P1** High · **P2** Medium · **P3** Low
 
 | # | Priority | Task | Detail |
 |---|---|---|---|
-| ~~F1~~ | ~~**P2**~~ | ~~Scheduled document refresh pipeline~~ | ✅ Done — `backend/rag/refresh.py` added with SHA-256 content hashing per URL; changed pages are re-ingested, unchanged pages skipped; Slack webhook alert on failures (`SLACK_WEBHOOK_URL`); APScheduler runs weekly via FastAPI lifespan (`REFRESH_INTERVAL_HOURS`, default 168h). |
-| F2 | **P2** | Cloud deployment | Deploy to Render / Railway / AWS. `render.yaml` exists but deployment has not been completed. |
+| ~~F1~~ | ~~**P2**~~ | ~~Document refresh pipeline~~ | ✅ Done — re-automated with content-hash change detection. `backend/rag/manifest.py` hashes normalised page text per URL in `data/refresh_manifest.json`; `python -m backend.rag.ingest --refresh-changed` only re-embeds URLs whose hash changed (upserting via delete-by-source, fixing a prior duplicate-chunk bug on re-runs), keeping weekly runs fast and cheap by skipping unchanged pages. `.github/workflows/refresh.yml` runs this every Monday 03:00 UTC, commits `data/` only when something actually changed, pushes to trigger a Render redeploy, and posts a Slack summary of what changed (or that nothing did). `--check` gives a dry-run for validating change detection via `workflow_dispatch`. |
+| ~~F2~~ | ~~**P2**~~ | ~~Cloud deployment~~ | ✅ Done — deployed to Render via Blueprint (`render.yaml`): FastAPI backend + React frontend, both free tier. ChromaDB snapshot committed to git so the Docker image ships with data. Verified working in production. |
 | F3 | **P2** | RAG answer quality evaluation framework | Build an eval set of known Q&A pairs from INZ documents. Measure retrieval recall and answer correctness. Needed to validate changes to the RAG pipeline. |
 | F4 | **P3** | Conversation memory across sessions | Currently conversation history resets on page reload. Persist messages to localStorage (frontend) or a lightweight DB (backend). |
 | F5 | **P3** | Analytics — track most common questions | Log anonymised question categories (not raw text) to understand which topics users ask about most. |

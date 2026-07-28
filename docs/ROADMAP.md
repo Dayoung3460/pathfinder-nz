@@ -78,12 +78,12 @@ Only the frontend changes. The FastAPI backend (`/chat` endpoint) remains untouc
 
 ### Completed
 - Document refresh pipeline with Slack alerting on every run
-  - Implemented as a scheduled job first (Render Cron, then GitHub Actions weekly), then deliberately switched to manual refresh — scheduled runs re-ingested regardless of whether INZ content had changed, which was wasteful on the free tier
+  - Implemented as a scheduled job first (Render Cron, then GitHub Actions weekly), then switched to manual refresh — scheduled runs re-ingested regardless of whether INZ content had changed, which was wasteful on the free tier
+  - Re-automated once change detection landed: `backend/rag/manifest.py` content-hashes each INZ page (whitespace/case-normalised, so incidental HTML noise doesn't trigger false positives) and stores it in `data/refresh_manifest.json`; `.github/workflows/refresh.yml` runs weekly, re-embeds only URLs whose hash changed, commits `data/` only when there's an actual change, and pushes to trigger a Render redeploy. Slack gets a summary either way.
 - Deployment to Render (React frontend + FastAPI backend, ChromaDB snapshot committed for deploys)
 - Automated tests for the retriever, RAG chain, and chat endpoint
 
 ### Remaining
-- Change detection before re-ingestion, so refresh can be safely re-automated
 - Conversation memory across sessions
 - Analytics to track most common questions
 - Evaluation framework to measure RAG answer quality

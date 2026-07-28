@@ -1,0 +1,141 @@
+name: Weekly document refresh
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"  # Every Monday at 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Check for changes only — do not embed, commit, or push"
+        type: boolean
+        default: false
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      # Not used for embeddings, but backend/config.py validates it on import.
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run document refresh
+        id: refresh
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}" = "true" ]; then
+            python -m backend.rag.ingest --check --summary-json summary.json
+          else
+            python -m backend.rag.ingest --refresh-changed --summary-json summary.json
+          fi
+
+      - name: Check for data changes
+        id: diff
+        run: |
+          if [ -n "$(git status --porcelain data/)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          CHANGED_COUNT=$(python -c "import json; s=json.load(open('summary.json')); print(len(s.get('changed', [])) + len(s.get('new', [])))")
+          git commit -m "chore(data): refresh INZ documents ($CHANGED_COUNT pages changed)"
+          git push
+
+      - name: Post Slack summary
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          try:
+              with open("summary.json") as f:
+                  summary = json.load(f)
+          except FileNotFoundError:
+              summary = None
+
+          run_url = f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          job_outcome = os.environ.get("JOB_STATUS", "unknown")
+          dry_run = os.environ.get("DRY_RUN") == "true"
+
+          if summary is None or job_outcome != "success":
+              text = (
+                  f":x: Pathfinder NZ — document refresh run failed.\n"
+                  f"<{run_url}|View run>"
+              )
+          else:
+              changed = summary.get("changed", [])
+              new = summary.get("new", [])
+              failed = summary.get("failed", [])
+              unchanged_count = summary.get("unchanged_count", 0)
+              chunks_embedded = summary.get("chunks_embedded", 0)
+              truncated = summary.get("truncated", False)
+              total_changed = len(changed) + len(new)
+
+              lines = []
+              if dry_run:
+                  lines.append(f":mag: Pathfinder NZ — refresh check: {total_changed} page(s) changed, {unchanged_count} unchanged.")
+              elif total_changed == 0:
+                  lines.append(f":white_check_mark: Pathfinder NZ — refresh checked {unchanged_count} pages, no INZ changes. Nothing to deploy.")
+              else:
+                  lines.append(f":clipboard: Pathfinder NZ — refresh found {total_changed} changed page(s), {chunks_embedded} chunks re-embedded. Render redeploy triggered.")
+
+              def fmt(entry):
+                  if isinstance(entry, dict):
+                      return f"- {entry.get('title') or entry.get('url')}"
+                  return f"- {entry}"
+
+              for entry in (new + changed)[:15]:
+                  lines.append(fmt(entry))
+              if total_changed > 15:
+                  lines.append(f"...and {total_changed - 15} more")
+
+              if truncated:
+                  lines.append(":warning: Run hit the chunk cap for this run — remaining changed pages will be picked up next run.")
+
+              if failed:
+                  lines.append(f":warning: {len(failed)} page(s) failed to fetch (left untouched):")
+                  for entry in failed[:10]:
+                      lines.append(fmt(entry))
+
+              lines.append(f"<{run_url}|View run>")
+              text = "\n".join(lines)
+
+          payload = json.dumps({"text": text}).encode()
+          req = urllib.request.Request(
+              os.environ["SLACK_WEBHOOK_URL"],
+              data=payload,
+              headers={"Content-Type": "application/json"},
+          )
+          urllib.request.urlopen(req)
+          PY
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          JOB_STATUS: ${{ steps.refresh.outcome }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
