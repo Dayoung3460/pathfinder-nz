@@ -2,7 +2,7 @@
 
 NZ visa assistant that answers questions from official Immigration New Zealand documents.
 
-> **Live demo:** https://pathfinder-nz-frontend.onrender.com (Phase 1 — Streamlit UI. React frontend rebuild is in progress.)
+> **Live demo:** https://pathfinder-nz-frontend.onrender.com (React frontend, deployed on Render)
 
 ## What it does
 
@@ -13,7 +13,7 @@ Pathfinder NZ answers visa-related questions using a RAG (Retrieval-Augmented Ge
 - **Visa Applicant / Immigrant** — visa types, eligibility, application procedures
 
 **Key features:**
-- Answers grounded in 55+ official INZ document sources
+- Answers grounded in 76+ official INZ document sources
 - Source URLs included with every answer
 - Relevance filtering — irrelevant sources are excluded automatically
 - Fallback response when no relevant document is found
@@ -34,17 +34,17 @@ Pathfinder NZ answers visa-related questions using a RAG (Retrieval-Augmented Ge
 | Layer | Technology |
 |---|---|
 | LLM | Anthropic Claude (Haiku 4.5) |
-| Embeddings | Google Gemini (gemini-embedding-001) |
+| Embeddings | OpenAI (text-embedding-3-small) |
 | RAG Framework | LangChain |
 | Vector Database | ChromaDB |
 | Backend API | FastAPI |
-| Frontend UI | Streamlit |
+| Frontend UI | React + Vite + Tailwind CSS (primary), Streamlit (legacy) |
 | Containerisation | Docker |
 
 ## Architecture
 
 ```
-User (Streamlit UI)
+User (React UI — primary)
     |
 Role Selection (Employer / Visa Applicant)
     |
@@ -64,7 +64,7 @@ Answer + Source URLs returned to UI
 
 - Python 3.11+
 - [Anthropic API key](https://console.anthropic.com/)
-- [Google API key](https://aistudio.google.com/apikey) (for embeddings)
+- [OpenAI API key](https://platform.openai.com/api-keys) (for embeddings)
 
 ### Option 1: Docker (recommended)
 
@@ -80,7 +80,7 @@ cp .env.example .env
 docker compose up
 ```
 
-Open http://localhost:8501 in your browser.
+Open http://localhost:3000 in your browser (React frontend). The legacy Streamlit UI is also available at http://localhost:8501.
 
 ### Option 2: Local development
 
@@ -141,7 +141,7 @@ Open http://localhost:8501 in your browser.
 | Variable | Required | Description |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | Yes | Anthropic API key for Claude LLM |
-| `GOOGLE_API_KEY` | Yes | Google API key for embeddings |
+| `OPENAI_API_KEY` | Yes | OpenAI API key for embeddings |
 | `CHROMA_DB_PATH` | No | ChromaDB storage path (default: `./data/chroma_db`) |
 | `BACKEND_URL` | No | Backend URL for frontend (default: `http://localhost:8000`) |
 
@@ -159,17 +159,26 @@ pathfinder-nz/
 │   │   ├── ingest.py        # Document scraping and ingestion
 │   │   ├── retriever.py     # ChromaDB retrieval with relevance filtering
 │   │   ├── chain.py         # LangChain RAG chain
-│   │   └── urls.py          # INZ source URLs (55 unique)
+│   │   ├── manifest.py      # Content-hash manifest for refresh change detection
+│   │   └── urls.py          # INZ source URLs
 │   └── prompts/
 │       ├── employer.py      # Employer mode system prompt
 │       └── applicant.py     # Applicant mode system prompt
-├── frontend/
-│   ├── app.py               # Streamlit chat UI
+├── frontend-react/          # Primary React frontend (Vite + Tailwind CSS)
+│   ├── src/
 │   └── Dockerfile
+├── frontend/                # Legacy Streamlit UI
+│   ├── app.py
+│   └── Dockerfile
+├── data/
+│   └── chroma_db/           # ChromaDB persistent storage (committed for Render deploys)
 ├── docs/
 │   ├── PRD.md               # Product requirements
 │   ├── ROADMAP.md           # Project roadmap
-│   └── PHASE2_NOTES.md      # Notes for React rebuild
+│   ├── PHASE2_NOTES.md      # Notes from the React rebuild
+│   └── TODO.md              # Task tracker
+├── .github/workflows/
+│   └── refresh.yml          # Weekly document refresh (change detection + Slack summary)
 ├── docker-compose.yml
 ├── requirements.txt
 └── CLAUDE.md                # AI agent instructions
@@ -200,7 +209,7 @@ pathfinder-nz/
 
 ## Document Sources
 
-All 55 INZ document URLs are managed in `backend/rag/urls.py`. Categories include:
+All 76 INZ document URLs are managed in `backend/rag/urls.py`. Categories include:
 
 - Employer accreditation and AEWV
 - Skilled Migrant Category (residence)
@@ -210,17 +219,21 @@ All 55 INZ document URLs are managed in `backend/rag/urls.py`. Categories includ
 - Health, character, fees, and processing times
 - Application process and supporting documents
 
-To re-ingest after INZ updates their content:
+A weekly GitHub Actions workflow (`.github/workflows/refresh.yml`) automatically re-scrapes every URL, re-embeds only the ones whose content changed (via a content-hash manifest in `data/refresh_manifest.json`), and posts a Slack summary.
+
+To run this manually:
 ```bash
-python -m backend.rag.ingest          # full re-ingest
-python -m backend.rag.ingest --resume # only new URLs
+python -m backend.rag.ingest                   # full re-ingest
+python -m backend.rag.ingest --resume          # only new URLs
+python -m backend.rag.ingest --refresh-changed # only URLs whose content changed
+python -m backend.rag.ingest --check           # dry run: report changes without embedding
 ```
 
 ## Roadmap
 
-- **Phase 1 (current):** MVP with Streamlit UI — complete
-- **Phase 2:** React frontend rebuild for production-quality UX
-- **Phase 3:** Cloud deployment, scheduled document refresh, analytics
+- **Phase 1:** MVP with Streamlit UI — complete
+- **Phase 2:** React frontend rebuild for production-quality UX — complete
+- **Phase 3 (current):** Production readiness — deployed to Render and automated document refresh are complete; conversation memory, analytics, and an answer-quality evaluation framework remain
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) for details.
 

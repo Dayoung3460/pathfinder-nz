@@ -3,7 +3,7 @@
 This module runs before any test file is imported, so module-level code here
 (env var setup, sys.path manipulation) takes effect before the backend packages
 are loaded.  This prevents API key validation errors from ChatAnthropic and
-GoogleGenerativeAIEmbeddings when running tests without real credentials.
+OpenAIEmbeddings when running tests without real credentials.
 """
 
 import os
@@ -18,8 +18,8 @@ import sys
 if not os.environ.get("ANTHROPIC_API_KEY"):
     os.environ["ANTHROPIC_API_KEY"] = "sk-ant-test-placeholder-do-not-use"
 
-if not os.environ.get("GOOGLE_API_KEY"):
-    os.environ["GOOGLE_API_KEY"] = "test-google-key-placeholder-do-not-use"
+if not os.environ.get("OPENAI_API_KEY"):
+    os.environ["OPENAI_API_KEY"] = "sk-test-openai-placeholder-do-not-use"
 
 if not os.environ.get("CHROMA_DB_PATH"):
     os.environ["CHROMA_DB_PATH"] = "/tmp/test_chroma_db"

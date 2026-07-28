@@ -1,7 +1,8 @@
 langchain
 langchain-anthropic
-langchain-google-genai
+langchain-openai
 langchain-community
+langchain-text-splitters
 langchain-chroma
 chromadb
 fastapi

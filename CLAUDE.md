@@ -10,8 +10,8 @@ Also read `docs/PRD.md` and `docs/ROADMAP.md` before starting any task.
 
 **Current:**
 - LLM: `claude-haiku-4-5-20251001` via `langchain-anthropic`
-- Embeddings: `gemini-embedding-001` via `langchain-google-genai`
-- Env vars: `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`
+- Embeddings: `text-embedding-3-small` via `langchain-openai`
+- Env vars: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`
 
 ```python
 # LLM (backend/rag/chain.py)
@@ -19,8 +19,8 @@ from langchain_anthropic import ChatAnthropic
 llm = ChatAnthropic(model="claude-haiku-4-5-20251001", max_tokens=1024)
 
 # Embeddings (backend/rag/retriever.py, backend/rag/ingest.py)
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+from langchain_openai import OpenAIEmbeddings
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 ```
 
 ---
@@ -157,6 +157,7 @@ Required in `.env`:
 
 ```
 ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
 CHROMA_DB_PATH=./data/chroma_db
 ```
 

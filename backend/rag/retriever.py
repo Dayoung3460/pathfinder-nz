@@ -1,9 +1,9 @@
 """ChromaDB retriever for INZ documents."""
 
 from langchain_chroma import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 
-from backend.config import GOOGLE_API_KEY, CHROMA_DB_PATH
+from backend.config import OPENAI_API_KEY, CHROMA_DB_PATH
 
 # ChromaDB uses distance scores
 # lower: more similar(Relevant query → scores ~0.45–0.50)
@@ -11,6 +11,8 @@ from backend.config import GOOGLE_API_KEY, CHROMA_DB_PATH
 
 # Any chunk scoring above 0.70 gets filtered out,
 # so irrelevant sources aren't shown to the user.
+# Verified against text-embedding-3-small: relevant queries score ~0.47-0.67,
+# irrelevant queries score ~1.50-1.71, so 0.70 cleanly separates the two.
 RELEVANCE_THRESHOLD = 0.70
 
 _vectorstore: Chroma | None = None
@@ -20,9 +22,9 @@ def get_vectorstore() -> Chroma:
     """Return the shared ChromaDB vectorstore instance (initialised once)."""
     global _vectorstore
     if _vectorstore is None:
-        embeddings = GoogleGenerativeAIEmbeddings(
-            model="models/gemini-embedding-001",
-            google_api_key=GOOGLE_API_KEY,
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            api_key=OPENAI_API_KEY,
         )
         _vectorstore = Chroma(
             persist_directory=CHROMA_DB_PATH,
